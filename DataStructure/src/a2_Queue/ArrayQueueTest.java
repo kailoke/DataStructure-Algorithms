@@ -9,15 +9,14 @@ import java.util.Scanner;
                       TODO那C这指针是啥...
         rear    尾指针 默认=-1,指向队列起始之前 -->iterator
  */
-public class ArrayQueue {
+public class ArrayQueueTest {
 
     public static void main(String[] args) {
-
         Scanner scanner = new Scanner(System.in);
         char order;
         boolean flag = true;
-        System.out.print("请输入初始化Queue大小(int): ");
-        Queue queue = new Queue(scanner.nextInt());
+        System.out.print("请初始化ArrayQueue(int): ");
+        ArrayQueue arrayQueue = new ArrayQueue(scanner.nextInt());
         while (flag){
             System.out.println("***********************************");
             System.out.println("\t s(show):显示队列");
@@ -31,22 +30,22 @@ public class ArrayQueue {
             order = scanner.next().charAt(0);
             switch (order){
                 case 's':
-                    queue.show();
+                    arrayQueue.show();
                     break;
                 case 'a':
                     System.out.print("请输入添加的数据(int)：");
-                    queue.add(scanner.nextInt());
+                    arrayQueue.add(scanner.nextInt());
                     break;
                 case 'g':
                     try {
-                        System.out.println("get : " + queue.get());
+                        System.out.println("get : " + arrayQueue.get());
                     } catch (ArrayIndexOutOfBoundsException e) {
                         e.printStackTrace();
                     }
                     break;
                 case 'p':
                     try {
-                        System.out.println("peek : " + queue.peek());
+                        System.out.println("peek : " + arrayQueue.peek());
                     } catch (RuntimeException e) {
                         e.printStackTrace();
                     }
@@ -61,44 +60,43 @@ public class ArrayQueue {
     }
 }
 
-class Queue{
-    private int maxSize;
-    private int front = -1;
-    private int rear = -1;
-    private int[] arr;
+class ArrayQueue extends MyQueue{
 
-    public Queue(){
+    public ArrayQueue(){
         this(10);
     }
-    public Queue(int maxSize){
+
+    ArrayQueue(int maxSize){
+        this.front = -1;
+        this.rear = -1;
         this.maxSize = maxSize;
         arr = new int[this.maxSize];
     }
-    // 判断队列是否满
+
     public boolean isFull(){
         // maxSize = rear + 1
         return this.rear == this.maxSize-1;
     }
-    // 判断队列是否为空
+
     public boolean isEmpty(){
-        return this.front == this.rear;
+        return this.front != this.rear;
     }
-    // 向队列添加数据
+
     public void add(int n){
-        if (!isFull()){
-            this.arr[++rear] = n;
+        if (isFull()){
+            System.out.println("队列已满...无法加入");
             return;
         }
-        System.out.println("队列已满...无法加入");
+        this.arr[++rear] = n;
     }
-    // 获取队列数据
+
     public int get() throws ArrayIndexOutOfBoundsException{
-        if (!isEmpty()){
+        if (isEmpty()){
             return this.arr[++front];
         }
         throw new ArrayIndexOutOfBoundsException("队列中没有数据，无法取出");
     }
-    // show
+
     public void show(){
         if (this.front!= -1){
             System.out.print("已取出数据: [ ");
@@ -107,7 +105,7 @@ class Queue{
             }
             System.out.println(" ]");
         }
-        if (!isEmpty()){
+        if (isEmpty()){
             System.out.print("当前队列：[ ");
             for (int i = front + 1; i <= rear; i++) {
                 System.out.print(this.arr[i] + " ");
@@ -117,11 +115,11 @@ class Queue{
         }
         System.out.println("队列为空");
     }
-    // 显示头数据
+
     public int peek() throws RuntimeException{
-        if (!isEmpty()){
-            return this.arr[front + 1];
+        if (isEmpty()){
+            throw new RuntimeException("队列为空");
         }
-        throw new RuntimeException("队列为空");
+        return this.arr[front + 1];
     }
 }
