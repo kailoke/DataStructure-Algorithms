@@ -48,6 +48,13 @@ public class MyStack {
         }
     }
 
+    public int peek(){
+        if (top == -1){
+            throw new IndexOutOfBoundsException("没有数据");
+        }
+        return stack[top];
+    }
+
     public static void main(String[] args) {
         MyStack stack = new MyStack(5);
         for (int i = 0; i < stack.maxSize; i++) {
