@@ -14,11 +14,11 @@ package a4_StackTest;
  */
 public class InfixExpression {
     // 判断是否为运算符
-    private static boolean isOpt(int val){
-        return  (val == '+' || val == '-' || val == '*' || val == '/');
+    static boolean isOpt(int val){
+        return  (val=='+' || val=='-' || val=='*' || val=='/' || val=='(' || val==')');
     }
     // 判断运算符的优先级，优先级越高数字越大
-    private static int OperatorPrecedence(int opt){
+    static int OperatorPrecedence(int opt){
         if (opt == '*' || opt == '/'){
             return 1;
         } else if ( opt == '+' || opt == '-'){
