@@ -22,7 +22,8 @@ public class InfixToSuffix {
     public static String testITS (String infix) throws IllegalArgumentException{
         Stack<String> num = new Stack<>();
         Stack<String> opt = new Stack<>();
-        char[] in = infix.replaceAll(" ", "").toCharArray();
+        // \\s+ 匹配任何空白字符
+        char[] in = infix.replaceAll("\\s+", "").toCharArray();
         ArrayList<String> list = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < in.length;) {
