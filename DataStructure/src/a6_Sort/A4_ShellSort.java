@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.Arrays;
 
 /*
-    希尔排序： 插入排序的改进版本，缩小增量排序
+    希尔排序： 插入排序的改进版本，缩小增量插入排序
     > 1. 缩小增量，逐步减少分组数量直至1组
     > 2. 每次都对所有分组使用插入排序
 
@@ -33,7 +33,7 @@ public class A4_ShellSort {
     // 分组直接插入法 ~= 16ms
     public static void shellSort1(int[] arr){
         for(int gap = arr.length / 2; gap > 0; gap /= 2) {
-            // 从每个分组第二个开始循环插入
+            // 从每个分组第二个开始循环插入排序
             for(int i = gap; i < arr.length; i++) {
                 int insert = arr[i];
                 int index;

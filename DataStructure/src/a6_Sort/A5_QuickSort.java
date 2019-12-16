@@ -20,6 +20,7 @@ public class A5_QuickSort {
         quickSort(arr1);
         System.out.println("arr1: " + Arrays.toString(arr1));
 
+        System.exit(0);
         int[] arr2 = new int[80000];
         for (int i = 0; i < arr2.length-1; i++) {
             arr2[i] = (int) (1+ Math.random()*8000000); // [1-800万]
@@ -29,7 +30,7 @@ public class A5_QuickSort {
         quickSort(arr2);
         Instant time2 = Instant.now();
         System.out.println("time:" + (time2.toEpochMilli() - time1.toEpochMilli()));
-//        System.out.println(Arrays.toString(arr2));
+        System.out.println(Arrays.toString(arr2));
     }
 
     public static void quickSort(@NotNull int[] arr) {
@@ -43,7 +44,7 @@ public class A5_QuickSort {
         if(low < high) {
             // 中轴值:middle
             int middle = array[low];
-            // 定义左右扫描指针
+            // 定义左右扫描指针，left可能是最值，所以从Left开始扫描
             int left = low, right = high;
             while(left != right) {
                 // 先从右边开始往左找，直到找到比base值小的数
@@ -65,6 +66,7 @@ public class A5_QuickSort {
 //            array[right] = middle;
             System.out.print("middle :" + middle + "\t");
             System.out.println(Arrays.toString(array));
+
             // 递归，继续向基准的左右两边执行和上面同样的操作
             // i的索引处为上面已确定好的基准值的位置，无需再处理
             sort(array, low, right - 1);
