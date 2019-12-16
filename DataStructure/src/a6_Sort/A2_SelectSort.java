@@ -8,7 +8,7 @@ import java.util.Arrays;
     > 1.每轮"选择"目标位置值为最值，从下一个开始遍历出 真正最值的位置
     > 2.将目标位置值和最值进行交换
 
-    减少了改值次数
+    相比冒泡，减少了改值次数，但比较次数依然多
  */
 public class A2_SelectSort {
     public static void main(String[] args) {
@@ -31,6 +31,7 @@ public class A2_SelectSort {
         for (int i = 0; i < arr.length-1; i++) {
             indexMin = i;
             for (int j = i + 1; j < arr.length; j++) {
+                // 和当前最小位置值做比较
                 if (arr[j] < arr[indexMin]) indexMin = j;
             }
             if (indexMin != i){
