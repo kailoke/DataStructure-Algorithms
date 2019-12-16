@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.Arrays;
 
 /*
-    快速排序，冒泡排序的改进版
+    快速排序:冒泡排序的改进版，理解为每次分组后 将无序的数据交换至有序位置
     > 1. 设置数组中轴值，按中轴值将数组分割，目前学习使用 子数组的第一个值作为中轴
     > 2. 右侧先开始扫描 <middle 的值，保证最后 middle 和 右指针停留值交换后，原右指针停留值交换至左侧
     > 3. 左侧后扫描 >middle 的值，找到值或扫描到右侧指针停止
@@ -20,8 +20,8 @@ public class A5_QuickSort {
         quickSort(arr1);
         System.out.println("arr1: " + Arrays.toString(arr1));
 
-        System.exit(0);
-        int[] arr2 = new int[80000];
+//        System.exit(0);
+        int[] arr2 = new int[8000000];  // 800万 ~= 1800ms
         for (int i = 0; i < arr2.length-1; i++) {
             arr2[i] = (int) (1+ Math.random()*8000000); // [1-800万]
         }
@@ -30,7 +30,8 @@ public class A5_QuickSort {
         quickSort(arr2);
         Instant time2 = Instant.now();
         System.out.println("time:" + (time2.toEpochMilli() - time1.toEpochMilli()));
-        System.out.println(Arrays.toString(arr2));
+//        System.out.println(Arrays.toString(arr2));
+        A0_SortedCheck.sortedCheck(arr2);
     }
 
     public static void quickSort(@NotNull int[] arr) {
@@ -64,8 +65,8 @@ public class A5_QuickSort {
             }
 //            array[low] = array[right];
 //            array[right] = middle;
-            System.out.print("middle :" + middle + "\t");
-            System.out.println(Arrays.toString(array));
+//            System.out.print("middle :" + middle + "\t");
+//            System.out.println(Arrays.toString(array));
 
             // 递归，继续向基准的左右两边执行和上面同样的操作
             // i的索引处为上面已确定好的基准值的位置，无需再处理
