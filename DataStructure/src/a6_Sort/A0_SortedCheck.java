@@ -7,7 +7,7 @@ public class A0_SortedCheck {
                 min = arr[i];
             }
             else {
-                System.out.println("error:" + (i+1));
+                System.out.println("error:" + i);
             }
         }
     }

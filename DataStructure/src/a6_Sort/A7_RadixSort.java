@@ -20,7 +20,7 @@ public class A7_RadixSort {
         System.out.println("arr1: " + Arrays.toString(arr1));
 
 //        System.exit(0);
-        int[] arr2 = new int[8000000];   // 800万 ~= 2000ms
+        int[] arr2 = new int[8000000];   // 800万 ~= 1800ms
         for (int i = 0; i < arr2.length-1; i++) {
             arr2[i] = (int) (1+ Math.random()*8000000); // [1-800万]
         }
