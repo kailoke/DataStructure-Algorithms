@@ -43,9 +43,9 @@ public class A7_RadixSort {
 
         for (int i = 1; max / (int)Math.pow(10,i-1) > 0; i++) {
             // 按基数 将数字放入桶中
-            for (int j = 0; j < arr.length; j++) {
-                radix = arr[j] / (int) Math.pow(10, i - 1) % 10;
-                list[radix][bucketIndex[radix]++] = arr[j];
+            for (int value : arr) {
+                radix = value / (int) Math.pow(10, i - 1) % 10;
+                list[radix][bucketIndex[radix]++] = value;
             }
             // 将桶中数字 还原
             int index = 0;
