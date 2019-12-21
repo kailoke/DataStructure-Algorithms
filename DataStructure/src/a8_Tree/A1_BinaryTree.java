@@ -251,9 +251,7 @@ class HeroNode{
         HeroNode temp = null;
         if (left != null) {
             temp = left.infixSearch(id);
-            if (temp != null){
-                return temp;
-            }
+            if (temp != null) return temp;
         }
         System.out.println("中序查找中");
         if (this.id == id){

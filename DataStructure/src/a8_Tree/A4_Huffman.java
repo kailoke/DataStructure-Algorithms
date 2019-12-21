@@ -1,6 +1,7 @@
 package a8_Tree;
 
 import java.util.ArrayList;
+import java.util.UnknownFormatConversionException;
 
 
 public class A4_Huffman {
@@ -65,6 +66,43 @@ class Node{
         return value;
     }
 
+    // 递归添加
+    public void add(Node node){
+        if (node.value < this.value){
+            if ( this.left == null){
+                this.left = node;
+            }else {
+                this.left.add(node);
+            }
+        }else {
+            if ( this.right == null){
+                this.right = node;
+            }else {
+                this.right.add(node);
+            }
+        }
+    }
+
+    void PreList(){
+        System.out.println(this);
+        if (this.left != null){
+            left.PreList();
+        }
+        if (this.right != null){
+            this.right.PreList();
+        }
+    }
+
+    void infixList(){
+        if (this.left != null){
+            this.left.infixList();
+        }
+        System.out.println(this);
+        if (this.right != null){
+            this.right.infixList();
+        }
+    }
+
     @Override
     public String toString() {
         return "Node{" +
@@ -72,14 +110,16 @@ class Node{
                 '}';
     }
 
-    public void PreList(){
-        System.out.println(this);
-        Node left = this.left;
-        if (left != null){
-            left.PreList();
+    public Node search(int value) {
+        if ( value < this.value){
+            if (this.left != null){
+                return this.left.search(value);
+            }
+        }else if (this.value == value) {
+            return this;
+        }else if (this.right != null){
+            return this.right.search(value);
         }
-        if (this.right != null){
-            this.right.PreList();
-        }
+        return null;
     }
 }

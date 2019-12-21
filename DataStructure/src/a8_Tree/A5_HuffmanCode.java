@@ -7,27 +7,27 @@ import java.util.*;
 public class A5_HuffmanCode {
     public static void main(String[] args) {
         String str = "i like like like java do you like a java";
-        // 1.获得byte[] 数组   字节数组   最后是以字节的方式传输，所以直接按字节的方式压缩
+        // 1.获得byte[] 数组   字节数组
         byte[] contentBytes = str.getBytes();
         System.out.println(contentBytes.length);
 
-        // 2.将byte[] 统计生成Nodes (编码表的生成依据)， 写入数据及权重
+        // 2.将byte[] 统计生成Nodes (huffmanTree的生存一句)
         List<CodeNode> nodes = getNodes(contentBytes);
+        System.out.println("NodeList:");
         System.out.println(nodes.toString());
 
         // 3.构建 HuffmanTree
         CodeNode huffmanTree = creatHuffmanTree(nodes);
-//        huffmanTree.preOrder();
+        System.out.println("HuffmanTree PreOrder:");
+        huffmanTree.preOrder();
 
-        // 4.创建huffmanCode
+        // 4.创建huffman 值:权重 映射表
         Map<Byte, String> huffmanCode = huffmanCode(huffmanTree);
-        System.out.println(huffmanCode.toString());
+        System.out.println("Huffman编码表：" + huffmanCode.toString());
 
-        byte[] huffman;
-        // 5. 压缩后的字节数组
-        for (int i = 0; i < str.length(); i++) {
-
-        }
+        // 5. 根据huffman编码表，压缩原字节数组
+        byte[] zipCodes = zip(contentBytes, huffmanCode);
+        System.out.println("zip后的字节数组 : " + Arrays.toString(zipCodes));
     }
 
     // 将字节数组 生成节点列表
@@ -35,7 +35,7 @@ public class A5_HuffmanCode {
         ArrayList<CodeNode> list = new ArrayList<>();
         // 使用map 来统计单位数量
         HashMap<Byte,Integer> map = new HashMap<>();
-        for (byte b : bytes) {
+        for (Byte b : bytes) {
             Integer temp = map.get(b);
             if (temp == null){
                 map.put(b,1);
@@ -67,13 +67,16 @@ public class A5_HuffmanCode {
 
     // 生成 霍夫曼编码表
     private static Map<Byte,String> huffmanCode(CodeNode node){
+        if (node == null){
+            return null;
+        }
         HashMap<Byte, String> map = new HashMap<>();
         StringBuilder sb = new StringBuilder();
-        getCodes(node,map,sb);
+        getCodes(node, map, sb);
 
         return map;
     }
-
+    // 左子节点 0   右子节点 1
     private static void getCodes(CodeNode node,Map<Byte,String> map,StringBuilder sb){
         StringBuilder mySB = new StringBuilder(sb);
         if (node.data != null){
@@ -83,13 +86,37 @@ public class A5_HuffmanCode {
             mySB.append(0);
             getCodes(node.left, map, mySB);
         }
-
+        // 若成功左递归，则需要重置mySB，去除左递归的修改
+        mySB = new StringBuilder(sb);
         if (node.right != null){
             mySB.append(1);
             getCodes(node.right, map, mySB);
         }
     }
 
+    // 根据huffman编码表，压缩原字节数组
+    private static byte[] zip(byte[] src, Map<Byte,String> huffmanCodes){
+        StringBuilder sb = new StringBuilder();
+        for (Byte b : src){
+            sb.append(huffmanCodes.get(b));
+        }
+        System.out.println("压缩后的bit数: " + sb.toString().length());
+        // 将bit占位的字符串 转成 bit 数组
+        int len = (sb.length() + 7) / 8;
+        byte[] zip = new byte[len];
+        int count = 0;
+        for (int i = 0; i < sb.length(); i += 8) {
+            String strByte;
+            if (i+8>sb.length()) {
+                strByte = sb.substring(i,sb.length());
+            }else {
+                strByte = sb.substring(i,i+8);
+            }
+            zip[count++]  = (byte) Integer.parseInt(strByte, 2);
+        }
+
+        return zip;
+    }
 }
 
 
@@ -134,5 +161,4 @@ class CodeNode implements Comparable<CodeNode>{
             this.right.preOrder();
         }
     }
-
 }
