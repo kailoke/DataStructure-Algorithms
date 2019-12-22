@@ -66,6 +66,10 @@ class Node{
         return value;
     }
 
+    public void setValue(int value) {
+        this.value = value;
+    }
+
     // 递归添加
     public void add(Node node){
         if (node.value < this.value){
@@ -121,5 +125,42 @@ class Node{
             return this.right.search(value);
         }
         return null;
+    }
+
+    public Node searchParent(int value) {
+        if ( value < this.value){
+            if (this.left != null && this.left.value == value){
+                return this;
+            }else if (this.left != null){
+                return this.left.searchParent(value);
+            }
+        }else if (this.right != null && this.right.value == value){
+            return this;
+        }else if (this.right != null){
+            return this.right.searchParent(value);
+        }
+        return null;
+    }
+
+    // 返回以该节点为根节点的树的高度
+    public int height(){
+        return Math.max(this.left == null ? 0 : this.left.height(),
+                this.right == null ? 0 : this.right.height()) + 1;
+    }
+
+    public int leftHeight(){
+        if (this.left == null){
+            return 0;
+        }else {
+            return this.left.height();
+        }
+    }
+
+    public int rightHeight(){
+        if (this.right == null){
+            return 0;
+        }else {
+            return this.right.height();
+        }
     }
 }

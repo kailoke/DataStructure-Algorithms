@@ -3,6 +3,14 @@ package a8_Tree;
 import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
+/*
+    HuffmanTree: 赫夫曼树是带权路径长度(WPL)最小的树，权值较大的节点离根节点较近
+    > 路径 ： 从A节点到B节点经过的通路
+    > 路径长度 ： 从根节点到目标节点经过的分支数目。
+    > 节点的权 ： 节点赋值
+    > 带权路径长度 ： 路径长度 * 节点的权
+    > 树的带权路径长度 WPL(Weight Path Length) : 所有叶子节点的带权路径长度和
+ */
 
 public class A5_HuffmanCode {
     public static void main(String[] args) {

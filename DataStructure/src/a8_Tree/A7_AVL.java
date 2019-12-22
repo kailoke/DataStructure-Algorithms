@@ -1,40 +1,38 @@
 package a8_Tree;
 
 /*
-    二叉排序树:  相对于数组 && 链表，同时拥有增删改和检索效率 crud
-    > 任何一个 非叶子节点 ，要求其左子节点的值 < 它，其右子节点的值 > 它
-        > 有相同值则可以放在 左/右， 推荐放 右
-    > 二叉排序树的CRUD，按值大小分叉减少了遍历次数
-
-    问题：最差是成为类似 单向链表 的二叉树，因为左或右子节点为null的判断，相比链表反而增加了遍历判断次数
+    平衡二叉树(Self-balancing Binary Search Tree): AVL树，保证查询效率较高
+    > 特点：它是一颗空树 或者 它的左右两个子树的高度差的绝对值 <= 1，并且左右两个子树都是平衡二叉树
+    > 常用算法： 红黑树、AVL、替罪羊树、Treap、伸展树
  */
 
-public class A6_BinarySortTree {
+
+import javax.swing.*;
+
+public class A7_AVL {
     public static void main(String[] args) {
-        // preOrder: 1 3 5 7 9 10 12
-        int[] arr1 = {7,3,10,12,5,1,9,2};
-        BinarySortTree tree = new BinarySortTree();
+        int[] arr1 = {4,3,6,5,7,8};
+        AVLTree avlTree1 = new AVLTree();
         for (int i : arr1) {
-            tree.add(new Node(i));
+            avlTree1.add(new Node(i));
         }
-        System.out.println("BinarySortTree infixOrder : ");
-        tree.infixList();
+        System.out.println("arr1中序遍历：");
+        avlTree1.infixList();
+        System.out.println("arr1树的高度：" + avlTree1.getRoot().height());
 
-        System.out.println("removed tree: ");
-        tree.remove(7);
-        tree.remove(12);
-        tree.remove(9);
-        Node remove = tree.remove(10);
-        tree.remove(5);
-        tree.remove(1);
-        tree.remove(2);
+        int[] arr2 = {10,12,8,9,7,6};
+        AVLTree avlTree2 = new AVLTree();
+        for (int i : arr1) {
+            avlTree2.add(new Node(i));
+        }
+        System.out.println("arr2中序遍历：");
+        avlTree2.infixList();
+        System.out.println("arr2树的高度：" + avlTree2.getRoot().height());
 
-//        System.out.println(remove == null ? "移除失败" : "移除Node的父节点 : "+remove.getValue());
-        tree.infixList();
     }
 }
 
-class BinarySortTree{
+class AVLTree{
     private Node root;
 
     public Node getRoot() {
@@ -48,12 +46,46 @@ class BinarySortTree{
             root.infixList();
         }
     }
+    // 左旋转
+    private void leftAVL(Node root) {
+        // 创建新节点将原根节点向左侧旋转
+        // 1. 设为原节点值
+        Node node = new Node(root.getValue());
+        // 2. 连接原左子节点
+        node.setLeft(root.getLeft());
+        // 3. 连接原节点右子节点的左子节点，即将＜新根节点的左节点移动至旋转原根节点的右侧较大值
+        node.setRight(root.getRight().getLeft());
+        // 4. 更新根节点为 右子节点
+        root.setValue(root.getRight().getValue());
+        // 5. 更新根节点的左子节点为 新节点
+        root.setLeft(node);
+        // 6. 跟新根节点的右子节点为 其原所属的右子节点
+        root.setRight(root.getRight().getRight());
+    }
+    // 右旋转
+    private void rightAVL(Node root) {
+        Node node = new Node(root.getValue());
+        node.setRight(root.getRight());
+        node.setLeft(root.getLeft().getRight());
+
+        root.setValue(root.getLeft().getValue());
+        root.setLeft(root.getLeft().getLeft());
+        root.setRight(node);
+    }
 
     public void add(Node node){
         if (root == null){
             root = node;
         }else {
             root.add(node);
+            int dis = root.leftHeight() - root.rightHeight();
+            // 进行左旋转
+            if (dis < -1){
+                leftAVL(root);
+            // 进行右旋转
+            }else if (dis > 1) {
+                rightAVL(root);
+            }
         }
     }
 
