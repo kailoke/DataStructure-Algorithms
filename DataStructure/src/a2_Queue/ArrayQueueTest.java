@@ -1,13 +1,15 @@
 package a2_Queue;
+import java.util.Queue;
 import java.util.Scanner;
 
-/*  有序表
+/*
     队列：先进先出
-       attribute:
-        maxSize 队列最大容量
-        front   头指针 默认=-1,指向队列起始之前 -->iterator
-                      TODO那C这指针是啥...
-        rear    尾指针 默认=-1,指向队列起始之前 -->iterator
+    数组模拟队列:
+      > maxSize 队列最大容量
+      > front   头指针 默认=-1,指向已经取出的最后一个元素，-1表示还没开始取出
+      > rear    尾指针 默认=-1,指向已经添加的最后一个元素，-1表示还没开始取出
+
+      * 数组队列，数组栈，首要考虑 空 和 满的条件
  */
 public class ArrayQueueTest {
 
@@ -75,11 +77,11 @@ class ArrayQueue extends MyQueue{
 
     public boolean isFull(){
         // maxSize = rear + 1
-        return this.rear == this.maxSize-1;
+        return this.rear == this.maxSize - 1;
     }
 
     public boolean isEmpty(){
-        return this.front != this.rear;
+        return this.front == this.rear;
     }
 
     public void add(int n){
@@ -105,7 +107,7 @@ class ArrayQueue extends MyQueue{
             }
             System.out.println(" ]");
         }
-        if (isEmpty()){
+        if (!isEmpty()){
             System.out.print("当前队列：[ ");
             for (int i = front + 1; i <= rear; i++) {
                 System.out.print(this.arr[i] + " ");

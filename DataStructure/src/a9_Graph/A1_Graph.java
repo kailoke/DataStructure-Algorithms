@@ -21,9 +21,6 @@ import java.util.Arrays;
     > 邻接(链)表： 数组(索引是顶点) + 链表(单向链表，代表当前索引顶点连通的点。只表示存在的边，不存在空间损失
  */
 
-/**
- * 图的创建
- */
 public class A1_Graph {
     // 顶点数组
     private ArrayList<String> vertexs;
@@ -31,16 +28,15 @@ public class A1_Graph {
     private int[][] edges;
     // 边数量
     private int edgeNum;
-    // 记录某个节点是否被访问
-    private boolean[] isVisited;
 
     public A1_Graph(int n) {
         vertexs = new ArrayList<>();
         edges = new int[n][n];
-        isVisited = new boolean[n];
 //        edgeNum = 0;
     }
-
+    /*
+        图的创建
+     */
     // 插入顶点
     public void insertVertex(String vertex) {
         vertexs.add(vertex);
@@ -53,12 +49,11 @@ public class A1_Graph {
      * @param weight 边的权
      */
     public void insertEdge(int v1,int v2,int weight) {
-        edges[v1][v2] = weight;
         // 无向图
+        edges[v1][v2] = weight;
         edges[v2][v1] = weight;
         edgeNum++;
     }
-
     // 返回节点的个数
     public int getVertexNum() {
         return vertexs.size();
@@ -68,7 +63,7 @@ public class A1_Graph {
         return edgeNum;
     }
     // 返回节点序号的数据
-    public String getVertex(int i ){
+    private String getVertex(int i){
         return vertexs.get(i);
     }
     // 返回两个节点的权值
@@ -88,7 +83,99 @@ public class A1_Graph {
         }
     }
 
-    // 获得初始节点的第一个邻接节点x
+    /*
+        深度优先遍历
+     */
+    // 获得当前节点 邻接矩阵的第一个(未被访问的)邻接节点
+    public int getFirstNeighbor(boolean[] isVisited, int vertex) {
+            // 第一个
+        for (int i = 0; i < this.vertexs.size(); i++) {
+            if (this.edges[vertex][i] == 1 && !isVisited[i]){
+                return i;
+            }
+        }
+        return -1;
+    }
+    // 获得当前节点的下一个(未被访问的)邻接节点(相对于上一个邻接节点)
+    public int getNextNeighbor(boolean[] isVisited, int vertex,int neighbor) {
+            // 下一个
+        for (int i = neighbor + 1; i < this.vertexs.size(); i++) {
+            if (this.edges[vertex][i] == 1 && !isVisited[i]){
+                return i;
+            }
+        }
+        return -1;
+    }
+    // 初始节点的深度递归
+    public void dfs(boolean[] isVisited, int vertex) {
+        // 1.访问当前节点
+        isVisited[vertex] = true;
+        System.out.print(this.getVertex(vertex) + "->");
+        // 2.查找当前节点的第一个(未被访问的)邻接节点
+        int neighbor = getFirstNeighbor(isVisited, vertex);
+        // 3.若存在邻接节点，则开始 递归 或 循环
+        while (neighbor > -1){
+            // 3.1 邻接节点未被访问，则展开深度递归
+            if (!isVisited[neighbor]){
+                dfs(isVisited, neighbor);
+            }
+            // 3.2 邻接节点已被访问，则循环查找其他(未被访问的)邻接节点
+            neighbor = getNextNeighbor(isVisited, vertex, neighbor);
+        }
+    }
+    // 深度优先遍历
+    public void dfs(int initialVertex){
+        // 初始化
+        boolean[] isVisited = new boolean[this.getVertexNum()];
+        // 依次选择初始节点遍历 : 因为有向图不能通过一个节点递归到所有节点
+        for (int i = 0; i < this.getVertexNum(); i++) {
+            int vertex = initialVertex++ % this.getVertexNum();
+            if (!isVisited[vertex]){
+                dfs(isVisited, vertex);
+            }
+        }
+    }
+
+    /*
+        图的广度优先遍历
+     */
+    // 初始节点的队列广度
+    public void bfs(boolean[] isVisited, int vertex){
+        // 1.访问当前节点
+        isVisited[vertex] = true;
+        System.out.print(this.getVertex(vertex) + "->");
+        ArrayList<Integer> broadList = new ArrayList<>();   // 也可以使用LinkedList.removeFirst() / addLast()
+        broadList.add(vertex);
+
+        // 2.若队列非空，进行队列内广度遍历
+        while (!broadList.isEmpty()){
+            // 2.1队列头节点出列
+            int out = broadList.remove(0);
+            // 2.2查找出列节点的第一个(未被访问的)邻接节点
+            int neighbor = getFirstNeighbor(isVisited, out);
+            while (neighbor > -1){
+                // 邻接节点未被访问
+                if (!isVisited[neighbor]){
+                    isVisited[neighbor] = true;
+                    System.out.print(this.getVertex(neighbor) + "->");
+                    broadList.add(neighbor);
+                }
+                // 查找出列节点的下一个(未被访问的)邻接节点
+                neighbor = getNextNeighbor(isVisited, out, neighbor);
+            }
+        }
+    }
+    // 广度优先遍历
+    public void bfs(int initialVertex) {
+        boolean[] isVisited = new boolean[this.getVertexNum()];
+        // 依次选择初始节点遍历
+//        for (int i = 0; i < this.getVertexNum(); i++) {
+            int vertex = initialVertex++ % this.getVertexNum();
+            if (!isVisited[vertex]) {
+                bfs(isVisited, vertex);
+            }
+//        }
+    }
 
     public static void main(String[] args) {
         int vertexNum = 5;

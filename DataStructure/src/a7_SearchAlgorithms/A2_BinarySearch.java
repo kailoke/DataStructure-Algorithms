@@ -3,11 +3,13 @@ package a7_SearchAlgorithms;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
-/*
-    二分查找：对目标有序子数组快速 对半分组
+/*  BinarySearch
+    二分查找：对目标有序数组快速 二分
     > 1. 传入数组必须有序
     > 2. 退出递归的条件:  2.1 成功匹配     2.2 没有匹配
     > 3. 复数个匹配值，左右扫描相同值
+
+    ** 二分递归查找算法的的T : O(log2 n)
  */
 public class A2_BinarySearch {
     public static void main(String[] args) {
@@ -20,7 +22,6 @@ public class A2_BinarySearch {
 
     }
 
-    // 基础二分，找到即返回
     public static int binarySearch1(@NotNull int[] arr, int value){
         if (arr.length <= 1){
             System.out.println("sss");
@@ -28,6 +29,7 @@ public class A2_BinarySearch {
         }
         return biSearch1(arr,0,arr.length - 1,value);
     }
+    // 基础二分，找到即返回
     private static int biSearch1(int[] arr, int low, int high, int value){
         // 值不存在时，直接返回-1
         if (low > high){
@@ -44,13 +46,13 @@ public class A2_BinarySearch {
         }
     }
 
-    // 查找所有相同值
-    public static ArrayList<Integer> binarySearch2(@NotNull int arr[], int value){
+    public static ArrayList<Integer> binarySearch2(@NotNull int[] arr, int value){
         if (arr.length <= 1){
             System.out.println("sss");
         }
         return biSearch2(arr,0, arr.length-1, value);
     }
+    // 查找所有相同值
     private static ArrayList<Integer> biSearch2(int[] arr, int low, int high, int value){
         // 值不存在时，直接返回-1
         if (low > high){

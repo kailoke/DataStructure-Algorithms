@@ -3,6 +3,11 @@ package a7_SearchAlgorithms;
 import java.util.Objects;
 import java.util.Scanner;
 
+/*
+    自定义Hash表
+    > 1.Hash表内部是 T型 数组
+    > 2.T型数组的每个元素是单向链表
+ */
 public class A5_HashDemo {
     public static void main(String[] args) {
         A5_HashDemo demo = new A5_HashDemo();

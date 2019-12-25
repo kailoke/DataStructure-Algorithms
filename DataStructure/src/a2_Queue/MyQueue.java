@@ -1,10 +1,10 @@
 package a2_Queue;
 
 abstract class MyQueue {
+    int[] arr;
     int maxSize;
     int front;
     int rear;
-    int[] arr;
 
     // 判断队列是否满
     public abstract boolean isFull();

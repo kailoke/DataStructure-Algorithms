@@ -1,8 +1,15 @@
 package a2_Queue;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
+/* 数组模拟环形队列
+    > 通过取模 % 的方式使数组索引可以在maxSize - 1 内循环
+    > 队列满： (rear + 1) % maxSize == front
+        > 将队列容量(rear所指)空出一个，判断是否是 rear+1 后追上 front，从而判断rear在front前(index更小)，二者重合则无法判断先后
+        > 因 front 始终取模循环 (front+1) % maxSize，则 front 初始值 = 0;指向下一个需要取出的数据
+        > rear 初始值 = 0，指向下一个需要插入的数据位置
+    > 队列空：front == rear。即front取完全部数据后追上rear
+ */
 public class CircleQueueTest {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -71,7 +78,7 @@ class CircleQueue extends MyQueue{
 
     @Override
     public boolean isFull() {
-        // rear和front相邻即满
+        // rear和front相邻即满，空出一个空间以判断是rear+1 == front
         return (rear + 1) % maxSize == front;
     }
 
@@ -82,7 +89,6 @@ class CircleQueue extends MyQueue{
 
     @Override
     public void add(int i) {
-        // rear和front之间总有一个空白位无法填入数值
         if (isFull()){
             System.out.println("队列已满...无法加入");
             return;
@@ -104,6 +110,8 @@ class CircleQueue extends MyQueue{
 
     // 队列中有效的数据个数 ： (rear - front + maxSize) % maxSize
     int size(){
+        // 若 rear > front : maxSize 取模自己则抵消
+        // 若 rear < front : 差值负数 + maxSize == 差值外的个数
         return (rear - front + maxSize) % maxSize;
     }
 
@@ -114,7 +122,7 @@ class CircleQueue extends MyQueue{
             return;
         }
         System.out.print("剩余队列：[ ");
-        for (int i = front ; i < front + size(); i++) {
+        for (int i = front ; i < front + this.size(); i++) {
             System.out.print(this.arr[i % maxSize] + " ");
         }
         System.out.println("]");
@@ -130,6 +138,9 @@ class CircleQueue extends MyQueue{
 
     public void showAll(){
         System.out.print("所有队列:");
-        System.out.println(Arrays.toString(arr));
+        // 从front开始遍历，但有一个空间闲置
+        for (int i = front; i < maxSize - 1; i++) {
+            System.out.println(this.arr[front % maxSize]);
+        }
     }
 }

@@ -2,9 +2,9 @@ package a7_SearchAlgorithms;
 
 import org.jetbrains.annotations.NotNull;
 
-/*
+/*  InsertSearch
    插值查找：二分查找的基础上让中轴值根据数组分布状态自适应
-   > mid = 起始点 + 区间长度 * (插值范围)/区间值范围
+   > mid = 起始点 + 区间索引长度 * (插值-起始点值范围)/区间值范围
    > ↑ 按插值所占整体数组的百分比划分区间长度
 
    适合用于元素分布呈较平滑线性的数据，即边际系数变化不大

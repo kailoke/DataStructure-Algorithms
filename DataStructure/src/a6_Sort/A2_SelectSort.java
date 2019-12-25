@@ -32,7 +32,9 @@ public class A2_SelectSort {
             indexMin = i;
             for (int j = i + 1; j < arr.length; j++) {
                 // 和当前最小位置值做比较
-                if (arr[j] < arr[indexMin]) indexMin = j;
+                if (arr[j] < arr[indexMin]) {
+                    indexMin = j;
+                }
             }
             if (indexMin != i){
                 arr[i] = arr[i] + arr[indexMin];

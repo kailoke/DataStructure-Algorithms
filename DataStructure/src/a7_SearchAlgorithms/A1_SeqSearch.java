@@ -2,8 +2,8 @@ package a7_SearchAlgorithms;
 
 import java.util.ArrayList;
 
-/*
-    线性查找,完整遍历整个数组查找目标
+/*  SequentialSearch
+    线性查找，完整遍历整个数组查找目标
  */
 public class A1_SeqSearch {
     public static void main(String[] args) {

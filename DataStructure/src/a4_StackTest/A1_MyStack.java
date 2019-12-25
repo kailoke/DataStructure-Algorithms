@@ -1,14 +1,15 @@
 package a4_StackTest;
 
 /*
-    使用数组模拟栈
+    栈 : 数组 模拟
+    可穷尽数组，在遍历/索引开始前，习惯上都用-1(数组开始前) <===> 参考Iterator
  */
-public class MyStack {
-    private int top = -1;
+public class A1_MyStack {
+    private int top = -1;   // 栈顶
     private int maxSize;
     private int[] stack;
 
-    public MyStack(int maxSize) {
+    public A1_MyStack(int maxSize) {
         this.maxSize = maxSize;
         stack = new int[maxSize];
     }
@@ -20,7 +21,7 @@ public class MyStack {
     public boolean isEmpty(){
         return top == -1;
     }
-    // push
+    // 入栈
     public void push(int i){
         if (isFull()){
             System.out.println("栈已满");
@@ -29,7 +30,7 @@ public class MyStack {
         stack[++top] = i;
     }
 
-    // pop
+    // 出栈
     public int pop(){
         if (isEmpty()){
             throw new NullPointerException();
@@ -56,7 +57,7 @@ public class MyStack {
     }
 
     public static void main(String[] args) {
-        MyStack stack = new MyStack(5);
+        A1_MyStack stack = new A1_MyStack(5);
         for (int i = 0; i < stack.maxSize; i++) {
             stack.push((i+1)*10);
         }
