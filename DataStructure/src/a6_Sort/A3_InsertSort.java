@@ -3,10 +3,12 @@ package a6_Sort;
 import java.time.Instant;
 import java.util.Arrays;
 
-/*
+/* 基本思想：将待排序的数据对象看成 有序表 和 无序表，将无序表中的元素从有序表后方顺次插入到有序表中
     插入排序: 将待插入值插入 有序元素中的有序位置
-    > 1.每轮缓存"待插入值"，与之之前的数组做比较并循环移动 区间数值
-    > 2.若有插入位置，则在插入位置后方插入缓存值
+    > 0.位置0默认有序，从位置1开始，找到其所属的插入位置
+    > 1.每轮缓存"待插入值"，使用辅助遍历指针与之前的元素做比较并循环向前移动
+    >   直到遇到有序元素，停止比较
+    > 2.在 停止位置+1 放入缓存值
 
     优势：减少与已有序元素的交互次数
  */
@@ -22,13 +24,14 @@ public class A3_InsertSort {
         }
         arr2[arr2.length-1] = 1;
         Instant time1 = Instant.now();
-        insertSort2(arr2);       // java有函数指针吗?
+        insertSort1(arr2);
         Instant time2 = Instant.now();
         System.out.println(time2.toEpochMilli() - time1.toEpochMilli());
         System.out.println(Arrays.toString(arr2));
+        A0_SortedCheck.sortedCheck(arr2);
     }
 
-    // ~=3600   自写插入，从头与有序元素比较，与有序元素的交互次数过多
+    // ~=3600   自写插入排序，从头与有序元素比较，与有序元素的交互次数过多
     public static void insertSort1(int[] arr){
 //        int temp;
         for (int i = 1; i < arr.length; i++) {
@@ -46,20 +49,25 @@ public class A3_InsertSort {
     // ~= 700
     public static void insertSort2(int[] arr){
         for (int i = 1; i < arr.length; i++) {
+            // 缓存当前值
             int temp = arr[i];
-            int index = i-1;
+            // 辅助遍历数组指针 [0,i-1]
+            int index = i - 1;
             while (index >= 0 && temp < arr[index]){
-                arr[index+1] = arr[index];
+                // 交换辅助指针的值至其后一个位置
+                arr[index + 1] = arr[index];
+                // 向前遍历
                 index--;
             }
-            if (index != i-1){
-                arr[index+1] = temp;
+            // 辅助指针移动过，省略计算和判断次数反而提高效率...
+            if (index != i - 1){
+                // 此时辅助指针停留的是有序元素位置，在其后方放入temp
+                arr[index + 1] = temp;
             }
-
         }
     }
 
-    // 重写while部分，因为元素已经有序，所以与有序元素的最值比较失败后即可跳出比较
+    // 重写while部分
     public static void insertSort3(int[] arr){
         for (int i = 1; i < arr.length; i++) {
             int temp = arr[i];
@@ -72,9 +80,9 @@ public class A3_InsertSort {
                     break;
                 }
             }
-            if (j != i - 1){
+//            if (j != i - 1){
                 arr[j+1] = temp;
-            }
+//            }
         }
     }
 }

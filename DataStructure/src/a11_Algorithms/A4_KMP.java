@@ -1,4 +1,4 @@
-package a10_Algorithms;
+package a11_Algorithms;
 
 import java.util.Arrays;
 

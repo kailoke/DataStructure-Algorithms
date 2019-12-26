@@ -1,11 +1,11 @@
-package a7_SearchAlgorithms;
+package a8_Hash;
 
 import java.util.Objects;
 import java.util.Scanner;
 
 /*
     自定义Hash表
-    > 1.Hash表内部是 T型 数组
+    > 1.Hash表内部管理的是 T型 数组
     > 2.T型数组的每个元素是单向链表
  */
 public class A5_HashDemo {
@@ -13,10 +13,10 @@ public class A5_HashDemo {
         A5_HashDemo demo = new A5_HashDemo();
         A5_HashDemo.HashDemo hashDemo = demo.new HashDemo(7);
 
-        // 交互文字
+        // 交互菜单
         String key;
         Scanner scanner = new Scanner(System.in);
-        while (true){
+        A:while (true){
             System.out.println("add  : 添加雇员");
             System.out.println("list : 显示雇员");
             System.out.println("find : 查找雇员");
@@ -41,13 +41,14 @@ public class A5_HashDemo {
                     hashDemo.findEmp(id);
                     break;
                 case "exit":
-                    scanner.close();
-                    System.exit(0);
+                    break A;
                 default:
                     System.out.println("------输入错误------");
                     break;
             }
         }
+        scanner.close();
+        System.out.println("***  程序执行完毕  ***");
     }
 
     // 需要存放的元素

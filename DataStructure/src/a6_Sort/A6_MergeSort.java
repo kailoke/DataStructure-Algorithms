@@ -1,15 +1,16 @@
 package a6_Sort;
 
 import org.jetbrains.annotations.NotNull;
-
 import java.time.Instant;
 import java.util.Arrays;
 
 /*
     归并排序： 分治策略
+    分 ： division = (low+high)/2
+        leftRecursion:(low,division)  rightRecursion:(division+1,high)
     > 1. 递归均分数组，直至字数组元素仅剩余1个
-    > 2. 从底部开始，被分开的两个数组开始合并到临时数组中
-    > 3. 将临时数组中的排序数组替换原被分组数组
+    > 2. 出栈的两个数组，按元素大小 合并到 临时数组中排序
+    > 3. 将临时数组中的已排序元素替换至 对应索引的原数组处
  */
 public class A6_MergeSort {
     public static void main(String[] args) {
@@ -49,11 +50,10 @@ public class A6_MergeSort {
         sort(arr, low, division, temp);
         sort(arr, division + 1, high, temp);
 
-        // 治
-//        int[] temp = new int[high-low + 1];   // 将temp数组放于堆空间，减少temp的创建和回收次数
-        int t = 0;
-        int left = low;
-        int right = division + 1;
+        // 治，出栈的两个子数组内部分别有序
+        int left = low;     // 左侧递归的数组起始索引
+        int right = division + 1;   // 右侧递归的数组起始索引
+        int t = 0;          // 临时数组合并索引
         // 将某一边全小的数值顺序填入temp
         while (left <= division && right <= high){
                 if (arr[left] < arr[right]){
@@ -61,6 +61,7 @@ public class A6_MergeSort {
                 }else {
                     temp[t++] = arr[right++];
                 }
+                // left/right ++后已经超出原子数组索引
         }
         // 处理剩余可能的未处理值
         while (left <= division){
@@ -69,7 +70,7 @@ public class A6_MergeSort {
         while (right <= high){
             temp[t++] = arr[right++];
         }
-        // 将排序好的数值复制进原数组
+        // 将排序好的数值按索引区域复制进原数组
         System.arraycopy(temp,0,arr,low, high-low + 1);
     }
 }

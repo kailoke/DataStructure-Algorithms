@@ -1,12 +1,13 @@
-package a8_Tree;
+package a9_Tree;
 
 /*
     数组：通过下表访问元素非常快，增删改操作效率低，检索目标效率低
     链表：增删操作效率高，但检索目标效率低(改需要先检索)
     树：提高检索速度、也同时保证数据的插入、删除、修改的速度
 
-    二叉树：
-    > 1. 比较次数，仅当比较节点的权和查找值时，才是比较次数，其余均为left\right探路
+    二叉树：每个节点最多能有两个子节点
+    > 满二叉树 ： 所有叶子节点在最后一层
+    > 完全二叉树 ：所有叶子节点在最大的两层上，只允许最后一层有空缺节点且空缺在右边
  */
 public class A1_BinaryTree {
     public static void main(String[] args) {
@@ -60,7 +61,7 @@ public class A1_BinaryTree {
         System.out.println("删除节点测试-------------------------------");
         System.out.println("删除前：");
         binaryTree.preOrder();
-        int delete = binaryTree.delete(6);
+        int delete = binaryTree.delete(4);
         if (delete > 0 ){
             System.out.print("删除成功，");
         }else {
@@ -295,13 +296,15 @@ class HeroNode{
             resp = 1;
             return resp;
         }
+        // 非空判断，避免 nullPointer
         if (this.right != null && this.right.id == id){
             this.right = null;
             resp = 1;
             return resp;
         }
 
-        // 左右递归，减少对叶子节点的遍历次数；减少对子节点的遍历次数
+        // 左右递归
+        // 两层判断，不对叶子节点再进行递归
         if (this.left != null){
             if (this.left.left != null || this.left.right !=null)
                 resp = this.left.deleteNode(id);

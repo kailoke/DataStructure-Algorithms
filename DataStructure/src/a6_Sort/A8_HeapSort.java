@@ -3,7 +3,7 @@ package a6_Sort;
 import java.time.Instant;
 import java.util.Arrays;
 
-/*
+/* 选择排序的一种
     堆排序: 自然排序：大顶堆   降序排序：小顶堆
     > 1. 将目标数组重建为 顶堆树 ==> 顺序存储的二叉树
         > ↑↑ 获得"完全二叉树"的最后一个非叶子节点索引 : arr.length/2 - 1

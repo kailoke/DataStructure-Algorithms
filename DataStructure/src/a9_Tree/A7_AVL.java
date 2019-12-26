@@ -1,4 +1,4 @@
-package a8_Tree;
+package a9_Tree;
 
 /*
     平衡二叉树(Self-balancing Binary Search Tree): AVL树，保证查询效率较高
@@ -142,53 +142,5 @@ class AVLTree{
         }else {
             return node.getValue();
         }
-    }
-
-    // 删除节点： 1 叶子节点(仅根节点)    2 非叶子节点+1个其子节点(根节点)    3 非叶子几点+2个其子节点
-    public Node remove(int value) {
-        Node target = search(value);
-        Node parent = null;
-        if (target != null) {
-            // 0.待删除的不是根节点则寻找 待删除节点的父节点
-            if (root.getValue() != value) parent = root.searchParent(value);
-            // 1. 删叶子节点
-            if (target.getLeft() == null && target.getRight() == null) {
-                // 1.1 删的是根节点
-                if (parent == null) {
-                    root = null;
-                    // 1.2 删的不是根节点
-                } else {
-                    // 删父节点左子节点
-                    if (parent.getLeft() != null && parent.getLeft().getValue() == value) {
-                        parent.setLeft(null);
-                        // 删父节点右子节点
-                    } else {
-                        parent.setRight(null);
-                    }
-                }
-                // 3. 非叶子节点+2个其子节点
-            } else if (target.getLeft() != null && target.getRight() != null) {
-                int temp = getRightedMin(target.getRight());
-                remove(temp);
-                target.setValue(temp);
-
-                // 2.非叶子节点+1个其子节点
-            } else {
-                // 2.1删根节点
-                if (parent == null) {
-                    root = root.getLeft() != null ? root.getLeft() : root.getRight();
-                    // 2.2非根节点
-                } else {
-                    // 删父节点的 左子节点
-                    if (parent.getLeft() != null && parent.getLeft().getValue() == value) {
-                        parent.setLeft(target.getLeft() != null ? target.getLeft() : target.getRight());
-                        // 删父节点的 右子节点
-                    } else {
-                        parent.setRight(target.getLeft() != null ? target.getLeft() : target.getRight());
-                    }
-                }
-            }
-        }
-        return parent;
     }
 }

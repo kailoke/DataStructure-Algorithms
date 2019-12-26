@@ -3,7 +3,9 @@ package a6_Sort;
 import java.time.Instant;
 import java.util.Arrays;
 
-/*
+import static a6_Sort.A0_SortedCheck.sortedCheck;
+
+/* 交换排序的一种
     冒泡排序：
     > 1.相邻元素逆序则交换
     > 2.每次冒泡都找出了 相邻比较符 的最值
@@ -25,13 +27,14 @@ public class A1_BubbleSort {
 
         System.out.println(time2.toEpochMilli() - time1.toEpochMilli());  // ~=12400
         System.out.println(Arrays.toString(arr2));
+        sortedCheck(arr2);
     }
 
     public static void bubbleSort(int[] arr){
         boolean exchange;
-        for (int i = 0; i < arr.length-1; i++) {
+        for (int i = 0; i < arr.length - 1; i++) {
             exchange = false;
-            for (int j = 0; j < arr.length-1-i; j++) {
+            for (int j = 0; j < arr.length - 1 - i; j++) {
                 if (arr[j] > arr[j+1]){
                     arr[j] = arr[j] ^ arr[j+1];
                     arr[j+1] = arr[j] ^ arr[j+1];

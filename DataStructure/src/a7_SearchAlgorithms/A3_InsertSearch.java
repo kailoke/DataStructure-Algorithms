@@ -3,16 +3,17 @@ package a7_SearchAlgorithms;
 import org.jetbrains.annotations.NotNull;
 
 /*  InsertSearch
-   插值查找：二分查找的基础上让中轴值根据数组分布状态自适应
+   插值查找：二分查找的基础上让中轴值根据数组分布状态自适应 按百分比分段数据
    > mid = 起始点 + 区间索引长度 * (插值-起始点值范围)/区间值范围
    > ↑ 按插值所占整体数组的百分比划分区间长度
+   > 当查找值不在数组中时，mid会越界，必须增加查找值和有序数组的 Min\Max 比较
 
    适合用于元素分布呈较平滑线性的数据，即边际系数变化不大
  */
 public class A3_InsertSearch {
     public static void main(String[] args) {
         int[] arr1 = new int[]{1,1,2,3,4,4,5,5,5,5,5,5};
-        int index1 = insertSearch(arr1, 5);
+        int index1 = insertSearch(arr1, 0);
         System.out.println("index1 :" + index1);
     }
 
@@ -21,9 +22,10 @@ public class A3_InsertSearch {
     }
 
     private static int insertSearch(int[] arr, int low, int high, int value) {
-        if (low > high && value < arr[low] && value > arr[high]){
+        if (low > high || value < arr[low] || value > arr[high]){
             return -1;
         }
+        // mid 可能越界，在出递归的条件必须增加 最小值\最大值判断
         int mid = low + (high - low) * (value - arr[low]) / (arr[high] - arr[low]);
         if (value < arr[mid]){
             return insertSearch(arr, low,mid-1, value);

@@ -1,20 +1,19 @@
-package a8_Tree;
+package a9_Tree;
 
 /*
-    顺序存储二叉树: 只考虑"完全"二叉树， 应用于堆排序
-    第n个元素的左子节点为 2 * n + 1
-    第n个元素的右子节点为 2 * n + 2
-    第n个元素的父节点为 (n - 1)/2
-    根节点的index = 0
+    顺序存储二叉树: 通常只考虑"完全"二叉树，应用于堆排序；因其按顺序从上至下，从左至右顺次添加
+    > 1. 根节点索引 : 0
+    > 2. 第n个索引的 左子节索引 ： 2 * n + 1
+    > 3. 第n个索引的 右子节索引 ： 2 * n + 2
+    > 4. 第n个索引的 父节点索引 ： (n - 1) > / 2
 
-    数组可以转换成数，树可以存储为数组
+    数组可以转换成树，树可以存储为数组
  */
 public class A2_SeqSaveBinaryTree {
     public static void main(String[] args) {
         int[] arr = {1,3,6,8,10,14};
         ArrBinaryTree arrBinaryTree = new ArrBinaryTree(arr);
         arrBinaryTree.preOrder();
-
     }
 }
 
@@ -25,6 +24,7 @@ class ArrBinaryTree{
         this.arr = arr;
     }
 
+    // 从根节点索引 0 开始遍历
     public void preOrder() {
         this.preOrder(0);
     }
@@ -35,9 +35,11 @@ class ArrBinaryTree{
             System.out.println("数组空，不需要遍历");
         }
         System.out.print(arr[index] + "\t");
+        // 当前索引的左子节点 : 2*index + 1
         if (2*index + 1 < arr.length){
             preOrder(2 * index + 1);
         }
+        // 当前索引的右子节点 : 2*index + 2
         if (2*index + 2 < arr.length){
             preOrder(2 * index + 2);
         }

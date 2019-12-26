@@ -3,8 +3,9 @@ package a6_Sort;
 import java.time.Instant;
 import java.util.Arrays;
 
-/*
+/* 交换排序的一种
     选择排序：
+    > 0.从位置 0 到 arr.length-1-1，比较位置 1 到 arr.length-1
     > 1.每轮"选择"目标位置值为最值，从下一个开始遍历出 真正最值的位置
     > 2.将目标位置值和最值进行交换
 
@@ -36,6 +37,7 @@ public class A2_SelectSort {
                     indexMin = j;
                 }
             }
+            // 使用 异或 +- 交换值必须有此判断，否则同位置的索引进行运算从原来上来说即错误
             if (indexMin != i){
                 arr[i] = arr[i] + arr[indexMin];
                 arr[indexMin] = arr[i] - arr[indexMin];
