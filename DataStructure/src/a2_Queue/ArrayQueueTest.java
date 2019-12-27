@@ -1,5 +1,4 @@
 package a2_Queue;
-import java.util.Queue;
 import java.util.Scanner;
 
 /*

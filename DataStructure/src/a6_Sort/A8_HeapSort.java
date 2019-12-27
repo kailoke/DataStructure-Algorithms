@@ -4,18 +4,23 @@ import java.time.Instant;
 import java.util.Arrays;
 
 /* 选择排序的一种
-    堆排序: 自然排序：大顶堆   降序排序：小顶堆
-    > 1. 将目标数组重建为 顶堆树 ==> 顺序存储的二叉树
-        > ↑↑ 获得"完全二叉树"的最后一个非叶子节点索引 : arr.length/2 - 1
-    > 2. 将最大值交换到新的队尾，之后从头开始循环重建直到所有最大值被遍历
-
-    大顶堆：每个节点的值都 >= 左右子节点的值  : arr[i] >= arr[2*i+1] && arr[i] >=arr [2*i+2]
-    小顶堆：每个节点的值都 =< 左右子节点的值  : arr[i] <= arr[2*i+1] && arr[i] <= arr[2*i+2]
+  堆排序: 利用堆数据结构(顺序存储二叉树)设计的排序算法
+  一、堆是具有以下性质的"完全二叉树"：
+    > 1.大顶堆(升序)：每个节点的值大于或等于其左右子节点的值，不要求左右子节点值的大小顺序
+        arr[i] >= arr[2*i+1] %% arr[i] >= arr[2*i+2]
+    > 2.小顶堆(降序)：每个节点的值小于或等于其左右子节点的值，不要求左右子节点值的大小顺序
+        arr[i] <= arr[2*i+1] && arr[i] <= arr[2*i+2]
+    > 3.顺序存储二叉树的最后一个内节点(非叶子节点)索引 : arr.length/2 - 1 == ((arr.length-1) - 1) / 2
+        ↑↑ 最后一个叶子节点的父节点索引：(index-1) / 2 == arr.length/2 - 1
+  二、堆排序思想：
+    > 1. 将待排序数组构造成 (大小)顶堆树 ==> 顺序存储的二叉树
+    > 2. 顶堆即最值，将其与末尾元素(arr.length-1)--交换
+    > 3. 循环构建剩余未排序的数组成堆，循环将根节点和选择的排序位置进行值交换
  */
 public class A8_HeapSort {
     public static void main(String[] args) {
-        int[] arr1 = {4,5,6,8,9,-1,2,56,11};
-        heapSort2(arr1);
+        int[] arr1 = {4,5,6,8,9,-1,2,40,11,56};
+        heapSort(arr1);
         System.out.println(Arrays.toString(arr1));
 
         int[] arr2 = new int[8000000];   // 800万 ~= 2100ms
@@ -24,66 +29,55 @@ public class A8_HeapSort {
         }
         arr2[arr2.length-1] = 1;
         Instant time1 = Instant.now();
-        heapSort1(arr2);
+        heapSort(arr2);
         Instant time2 = Instant.now();
         System.out.println("time:" + (time2.toEpochMilli() - time1.toEpochMilli()));
 //        System.out.println(Arrays.toString(arr2));
         A0_SortedCheck.sortedCheck(arr2);
     }
-    // 标准写法，一次大重构后，从根节点开始循环重构
-    public static void heapSort1(int[] arr) {
-        // 第一次重构整个堆
+
+    // 堆排序：首次重构堆后，从根节点开始重构
+    public static void heapSort(int[] arr) {
+        // 首次重构堆: 从最后一个内节点索引开始 i = ((arr.length-1) - 1)/2
+        // 逆序调整所有内节点，使每一个内节点称为子顶堆树
         for (int i = arr.length/2 -1; i >= 0 ; i--) {
             toBigHead(arr, i, arr.length);
         }
-        // 从最后一个序号开始交换数值，直到index==0结束
+        // 从最后一个序号开始和根节点交换数值，直到数组第二个位置交换完毕
         for (int i = arr.length-1; i > 0 ; i--) {
             arr[0] = arr[0] ^ arr [i];
             arr[i] = arr[0] ^ arr [i];
-            arr[0] = arr[0] ^ arr [i];
-            toBigHead(arr,0, i);    // 从根节点开始
-            // 上述已成功交换一次，则下次length = 原长度 - 1  即 arr.length -1 +1 -1,
+            arr[0] = arr[0] ^ arr [i];                    //    (new arr.length)
+            // 之后从根节点开始重构，仅需将根节点交换到其最小位置    （      i     ）
+            // 已成功完成一次选择，则下次重构length = 原长度 - 1  即 arr.length -1 +1 -1,
+            toBigHead(arr,0, i);
         }
     }
 
-    // 自我尝试写法，每次都在遍历，蠢
-    public static void heapSort2(int[] arr) {
-        // 需要调整的次数 arr.length - 1
-        for (int i = arr.length - 1; i > 0 ; i--) {
-            // 1.重构 堆
-            for (int j = (i+1)/2 - 1; j >= 0; j--) {
-                toBigHead(arr, j, i+1);
-            }
-            // 2.交换最大值到新队尾
-            arr[0] = arr[0] ^ arr [i];
-            arr[i] = arr[0] ^ arr [i];
-            arr[0] = arr[0] ^ arr [i];
-        }
-    }
-
-    /**
+    /** 从最后一个非叶子节点开始，从左至右，从下至上进行调整所有的非叶子节点
      *  将非叶子节点调整为 满足大顶堆条件的子树
      * @param arr   待调整数组
      * @param i     非叶子节点在数组中的索引
-     * @param lenght    对多少个元素进行调整，length逐渐减少
+     * @param length    对多少个元素进行调整，length逐渐减少
      */
-    public static void toBigHead(int[] arr,int i, int lenght){
+    public static void toBigHead(int[] arr,int i, int length){
         int temp = arr[i];
-        // 从左子节点开始遍历
-        for (int j = i*2+1; j < lenght; j = j*2+1) {
-            // 寻找最大的子节点
-            if (j+1 < lenght && arr[j] < arr[j+1]){
+        // 当前节点的左子节点index = 2*i+1   子节点(j || j++)的左子节点index = 2*index+1
+        for (int j = i*2+1; j < length; j = j*2+1) {
+            // 获得当前节点的较大子节点 索引，并以较大子节点索引为for循环基础展开遍历
+            if (j+1 < length && arr[j] < arr[j+1]){
                 j++;
             }
-            // 非叶子节点 不是最大
+            // 当前节点 < 较大子节点
             if ( temp < arr[j]) {
-                arr[i] = arr[j];    // 将最大的子节点值赋给非叶子节点
-                i = j;              // 标记此子节点，循环搭建以其子节点为父节点的子树堆
+                arr[i] = arr[j];    // 将较大的子节点值 赋给 当前节点
+                i = j;              // 更新当前节点的 索引位置信息至被替换的位置
             }else {
-                break;  //叶子节点最大，传入的非叶子节点一定没有更多的子节点了
+                break;  // 因为逆序，其所有子节点已经是顶堆子树；当自身后继节点也是顶堆树时，整个子树也是顶堆树
             }
+            // 因有其他值成为当前节点子节点的新父节点值，需要继续循环对比，确认其子树全部是顶堆子树
         }
-        // 调整arr[index] 至其最小的位置
+        // 更新最后的被替换位置值为 当前节点值，完成当前节点值的移动
         arr[i] = temp;
     }
 }
