@@ -3,31 +3,39 @@ package a11_Algorithms;
 import java.util.Arrays;
 
 /*
-    KMP:三位设计者首名，
-    > 当子串出现不匹配字符时，不对源字符串进行指针回溯+1
-    > 源字符串指向值和 子串部分匹配表的上一个相同匹配值的 子串索引值 进行比较，若相等则此索引前的值均相等
-        > 判断源字符串的 匹配后缀 == 子字符串的匹配前缀
-    > 子串的部分匹配值，没有部分匹配则又从头开始匹配；使源字符串不用进行回溯
+    KMP:三位该算法的设计者首名
+    > 当 S 和 T 出现不匹配字符时，利用已经部分匹配这个有效信息，保持 i 指针不回溯
+      通过修改 j 指针至 T 部分匹配前缀(和Si部分后缀相同)的索引+1处，让模式串尽量地移动到有效的位置继续比较
+  二、部分匹配值
+    > 当前字符串"之前字符串"中，最大长度的相同后缀前缀
+    > 后缀：sub(非头，尾)  j 扫描后缀
+    > 前缀：sub(头，非尾)  k 扫描前缀
  */
 public class A4_KMP {
     public static void main(String[] args) {
+        // Brute Match
         String src1 = "硅硅谷 尚硅谷你尚硅 尚硅谷你尚硅谷你尚硅你好";
         String pat1 = "尚硅谷你尚硅你";
-
-        // 顺序匹配
         int index1 = sequentialMatch(src1, pat1);
-        System.out.println("sequential found:" + index1);
+        System.out.println("sequential1 found:" + index1);
 
         String src2 = "BBC ABCDAB ABCDABCDABDE";
         String pat2 = "ABCDABD";
-//        String pat2 = "BBC";
-        int[] next = partialMatch(pat2);
-        System.out.println("next : " + Arrays.toString(next));
+        int[] next2 = partialMatch(pat2);
+        System.out.println("next2 : " + Arrays.toString(next2));
+        int kmp2 = KMP(src2, pat2);
+        System.out.println("kmp2 found:" + kmp2);
 
-        int kmp = KMP(src2, pat2);
-        System.out.println("kmp found:" + kmp);
+        String src3 = "abacbababeca";
+        String pat3 = "abab";
+//        String pat3 = "abaabe";
+        int[] next3 = partialMatch(pat3);
+        System.out.println("next3 : " + Arrays.toString(next3));
+        int kmp3 = KMP(src3, pat3);
+        System.out.println("kmp3 found:" + kmp3);
     }
-    // 暴力匹配
+
+    // Brute Match
     public static int sequentialMatch(String src,String pattern){
         char[] dest = src.toCharArray();
         char[] pat = pattern.toCharArray();
@@ -49,22 +57,27 @@ public class A4_KMP {
         return j == pat.length ? i-j : -1;
     }
 
-    // 1. 得到pattern的部分匹配值
-    public static int[] partialMatch(String pattern){
+    // next[] 当前字符"之前字符串"中，最大长度的前缀后缀
+    private static int[] partialMatch(String pattern){
         int[] next = new int[pattern.length()];
-        next[0] = 0;    // 长度1的字符串，没有前后缀，部分匹配值 == 0;
+        next[0] = -1;    // 没有匹配值标记
+                         // index=0字符之前没有字符，直接不匹配，在index=1处直接填入0
 
-        // i指向pat
-        for (int i = 1,j = 0; i < pattern.length(); i++) {
-            // 部分匹配值的核心，此处 j = next[j-1] 不懂
-            while (j > 0 && pattern.charAt(i) != pattern.charAt(j)) {
-                j = next[j-1];
+        int j = 0;  // 扫描后缀
+        int k = -1; // 当前字符的"之前字符串"最大前缀后缀，扫描前缀
+        // j < arr.length-1 : 之前字符串的最大index = arr.length - 1
+        // j将所有之前字符串尝试匹配后，跳出循环
+        while ( j < pattern.length() - 1) {
+            // (连续)失配后，pat[j] != pat[0] --> k == -1 --> j++,k重置,下一个字符索引处=0 (没有匹配值)
+            // k == -1 : 没有匹配值，更新值后继续扫描
+            // pat[j] == pat[k] ，后缀起始和前缀起始相同，更新值后继续扫描
+            if (k == -1 || pattern.charAt(j) == pattern.charAt(k)) {
+                ++j;            // 当前字符串的匹配长度 填在 下一个字符索引处
+                ++k;            // 重置k 或 增加k匹配长度
+                next[j] = k;    // 在下一个字符索引处填入当前的最大前缀后缀
+            }else {
+                k = next[k];    // 失配时，k移动到之前已匹配的最大前缀索引+1处，尝试找到跟多匹配值
             }
-            // 后缀(从头后开始逐渐减少长度至尾巴)的结束 == 前缀(从头开始逐渐增加长度至尾巴前)的起始 则为部分匹配
-            if (pattern.charAt(i) == pattern.charAt(j)) {
-                j++;
-            }
-            next[i] = j;
         }
         return next;
     }
@@ -78,20 +91,21 @@ public class A4_KMP {
         // 获得子串的部分匹配值
         int[] next = partialMatch(pat);
 
-        // i指向src, j指向pat
-        for (int i = 0,j = 0; i < src.length(); i++) {
-            // KMP算法核心：字符不等时，重新指向pat指针j为上一个部分匹配值的索引，对比是否和子串索引值一致
-            // j == 0 ,没有任何相等值时不需要进行匹配值查找
-            if (j > 0 && src.charAt(i) != pat.charAt(j)){
-                j = next[j-1];
-            }
-            if (src.charAt(i) == pat.charAt(j)){
+        int i = 0;  // 指向src
+        int j = 0;  // 指向pat
+        // 匹配成功则j跳出循环，匹配失败则i跳出循环
+        while ( i < src.length() && j < pat.length()) {
+            // (连续)失配后， src[i] != pat[0] --> k == -1 --> i++,j重置为0
+            // j == -1 : src[i] != pat[0] 后移i，重置j
+            if (j == -1 || src.charAt(i) == pat.charAt(j)) {
+                i++;
                 j++;
+            }else {
+                j = next[j];    // 失配时 pat相对于src向右移动了 j - next[j] 位
             }
-            if (j == pat.length()) {
-                // return时，i没有执行i++，手动+1
-                return i + 1 - j;
-            }
+        }
+        if ( j == pat.length()) {
+            return i - j;
         }
         return -1;
     }

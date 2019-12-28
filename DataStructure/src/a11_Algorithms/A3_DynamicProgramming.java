@@ -31,6 +31,7 @@ public class A3_DynamicProgramming {
         for (int i = 1; i < table.length; i++) {
             // 不处理第一列   J即为背包的渐进重量
             for (int j = 1; j < table[0].length; j++) {
+                // 物品重量大于 背包容量j
                 if (weight[i-1] > j){   // 第一个元素从0开始
                     table[i][j] = table[i-1][j];
                 }else {                 // weight[i-1] <= j
