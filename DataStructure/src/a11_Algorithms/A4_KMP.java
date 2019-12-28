@@ -60,13 +60,12 @@ public class A4_KMP {
     // next[] 当前字符"之前字符串"中，最大长度的前缀后缀
     private static int[] partialMatch(String pattern){
         int[] next = new int[pattern.length()];
-        next[0] = -1;    // 没有匹配值标记
+        next[0] = -1;    // 没有匹配值标记 : next[0] = k
                          // index=0字符之前没有字符，直接不匹配，在index=1处直接填入0
 
         int j = 0;  // 扫描后缀
         int k = -1; // 当前字符的"之前字符串"最大前缀后缀，扫描前缀
         // j < arr.length-1 : 之前字符串的最大index = arr.length - 1
-        // j将所有之前字符串尝试匹配后，跳出循环
         while ( j < pattern.length() - 1) {
             // (连续)失配后，pat[j] != pat[0] --> k == -1 --> j++,k重置,下一个字符索引处=0 (没有匹配值)
             // k == -1 : 没有匹配值，更新值后继续扫描
@@ -74,7 +73,12 @@ public class A4_KMP {
             if (k == -1 || pattern.charAt(j) == pattern.charAt(k)) {
                 ++j;            // 当前字符串的匹配长度 填在 下一个字符索引处
                 ++k;            // 重置k 或 增加k匹配长度
-                next[j] = k;    // 在下一个字符索引处填入当前的最大前缀后缀
+//                next[j] = k;    // 在下一个字符索引处填入当前的最大前缀后缀
+                if (pattern.charAt(j) != pattern.charAt(k)) {
+                    next[j] = k;
+                }else {
+                    next[j] = next[k];
+                }
             }else {
                 k = next[k];    // 失配时，k移动到之前已匹配的最大前缀索引+1处，尝试找到跟多匹配值
             }
